@@ -1,0 +1,11 @@
+Your algorithms should be plain English explanations for the steps your program will take to solve these problems.
+
+Write out your algorithm for Problem 2 here:
+    1. try 0,1, all the way to 26 as all possible shifts, for each shift, decode the cipher text to get a text
+    2. count the number of word in the text
+    3. find the shift giving the maximum number of word
+
+
+Write out your algorithm for Problem 4 here:
+    1. find the best shift of the text for which we can get valid word as many as possible before a invalid word, remember the position of first invalid word and the corrent shift
+    2. recursitively do that as what to do in 1. until reach the end of text, for each recursion we start finding shift from the position we get from last step

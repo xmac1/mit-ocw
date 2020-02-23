@@ -1,0 +1,35 @@
+def evaluate_poly(poly, x):
+    sum = 0.0
+    i = 0
+    for d in poly:
+        sum += float(d * x**i)
+        i += 1
+    return sum
+
+def compute_deriv(poly):
+    deriv = ()
+    i = 0
+    for d in poly:
+        if i < 1:
+            i += 1
+            continue
+        deriv = deriv + (i * d, )
+        i += 1
+    
+    return deriv
+
+def compute_root(poly, x_0, epsilon):
+    x = float(x_0)
+    deriv = compute_deriv(poly)
+    print 'deriv:', deriv
+    e = evaluate_poly(poly, x) - 0.0
+    while abs(e) >= epsilon:
+        x = x - evaluate_poly(poly, x) / evaluate_poly(deriv, x)
+        e = evaluate_poly(poly, x) - 0.0
+    return x
+        
+
+poly =  (-13.39, 0.0, 17.5, 3.0, 1.0)
+x_0 = 0.1
+epsilon = 0.0001
+print 'the roof of ', poly, 'is', compute_root(poly, x_0, epsilon)
