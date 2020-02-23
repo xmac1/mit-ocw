@@ -67,21 +67,21 @@ def cmpValue(subInfo1, subInfo2):
     Returns True if value in (value, work) tuple subInfo1 is GREATER than
     value in (value, work) tuple in subInfo2
     """
-    # TODO...
+    return subInfo1[0] > subInfo2[0]
 
 def cmpWork(subInfo1, subInfo2):
     """
     Returns True if work in (value, work) tuple subInfo1 is LESS than than work
     in (value, work) tuple in subInfo2
     """
-    # TODO...
+    return subInfo1[1] < subInfo2[1]
 
 def cmpRatio(subInfo1, subInfo2):
     """
     Returns True if value/work in (value, work) tuple subInfo1 is 
     GREATER than value/work in (value, work) tuple in subInfo2
     """
-    # TODO...
+    return float(subInfo1[0])/float(subInfo1[1]) > float(subInfo2[0]) / float(subInfo2[1])
 
 def greedyAdvisor(subjects, maxWork, comparator):
     """
@@ -95,7 +95,24 @@ def greedyAdvisor(subjects, maxWork, comparator):
     comparator: function taking two tuples and returning a bool
     returns: dictionary mapping subject name to (value, work)
     """
-    # TODO...
+    select_subs = {}
+
+    left = maxWork
+    while left > 0:
+        best = None
+        for name in subjects.keys():
+            if name in select_subs:
+                continue
+            work = subjects.get(name)[1]
+            if (best == None or comparator(subjects[name], subjects[best])) and work <= left:
+                best = name
+        if best == None or subjects[best][1] > left:
+            break
+        select_subs[best] = subjects[best]
+        left = left - subjects[best][1]
+    return select_subs
+
+
 
 #
 # Problem 3: Subject Selection By Brute Force
@@ -110,9 +127,50 @@ def bruteForceAdvisor(subjects, maxWork):
     maxWork: int >= 0
     returns: dictionary mapping subject name to (value, work)
     """
-    # TODO...
+    validSubs = {}
+    nameList = subjects.keys()
+    allList = power(nameList, [], [])
+    invalidList = []
+    for selectList in allList:
+        totalWork = 0
+        for name in selectList:
+            totalWork += subjects[name][1]
+        if totalWork > maxWork:
+            invalidList.append(selectList)
+    for l in invalidList:
+        allList.remove(l)
+    bestValue = 0
+    bestChoice = None
+    for l in allList:
+        value = 0
+        for name in l:
+            value += subjects[name][0]
+        if value > bestValue:
+            bestChoice = l
+            bestValue = value
+    m = {}
+    for name in bestChoice:
+        m[name] = subjects[name]
+    return m
+        
+
+def power(nameList, validList, ret):
+    if len(nameList) <= 0:
+        if len(validList) == 0:
+            ret.append([])
+        return ret
+    x = validList[:]
+    x.append(nameList[0])
+    ret.append(x)
+    power(nameList[1:], x, ret)
+    power(nameList[1:], validList, ret)
+    return ret
+
+
+def testPower():
+    ret = power([1, 2, 3], [], [])
+    print ret
 
 
 if __name__ == '__main__':
-    sub = loadSubjects('shortened_subjects.txt')
-    printSubjects(sub)
+    testPower()
